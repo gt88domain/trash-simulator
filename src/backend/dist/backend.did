@@ -1,0 +1,210 @@
+type SwapReceipt = 
+ record {
+   amountIn: nat;
+   amountOut: nat;
+   at: int;
+   balanceCents: nat;
+   feeCents: nat;
+   fromAsset: text;
+   midCentsE4: nat;
+   midCentsE4To: nat;
+   priceImpactBp: nat;
+   toAsset: text;
+ };
+type SwapQuote = 
+ record {
+   amountIn: nat;
+   amountOut: nat;
+   feeCents: nat;
+   fromAsset: text;
+   midAmountOut: nat;
+   midCentsE4: nat;
+   midCentsE4To: nat;
+   priceImpactBp: nat;
+   route: vec text;
+   toAsset: text;
+ };
+type SaveOutput = 
+ record {
+   data: text;
+   level: nat;
+   name: text;
+   recyclePoints: nat;
+   totalCollected: nat;
+   totalDisposed: nat;
+   updatedAt: int;
+   xp: nat;
+ };
+type SaveInput = 
+ record {
+   data: text;
+   level: nat;
+   recyclePoints: nat;
+   totalCollected: nat;
+   totalDisposed: nat;
+   xp: nat;
+ };
+type RegisterResult = 
+ variant {
+   alreadyRegistered: ProfileOutput;
+   anonymous;
+   invalidName;
+   nameTaken;
+   ok: ProfileOutput;
+ };
+type Purchase = 
+ record {
+   costCents: nat;
+   order: Order;
+ };
+type ProfileOutput = 
+ record {
+   hasSave: bool;
+   level: nat;
+   name: text;
+   recyclePoints: nat;
+   totalCollected: nat;
+   totalDisposed: nat;
+   updatedAt: int;
+   xp: nat;
+ };
+type PricePoint = 
+ record {
+   at: int;
+   midCentsE4: nat;
+ };
+type Pool = 
+ record {
+   reserveCents: nat;
+   reserveUnits: nat;
+   revertedAt: int;
+   trend: vec PricePoint;
+ };
+type Order = 
+ record {
+   amount: nat;
+   createdAt: int;
+   id: nat;
+   material: text;
+   pricePerUnitCents: nat;
+   seller: principal;
+   sellerName: text;
+ };
+type MarketSnapshot = 
+ record {
+   at: int;
+   feeBp: nat;
+   feeBurnedCents: nat;
+   priceScale: nat;
+   prices: vec MarketPrice;
+   swaps: nat;
+   wholesaleSpreadBp: nat;
+ };
+type MarketResult_4 = 
+ variant {
+   err: MarketError;
+   ok: Purchase;
+ };
+type MarketResult_3 = 
+ variant {
+   err: MarketError;
+   ok: Order;
+ };
+type MarketResult_2 = 
+ variant {
+   err: MarketError;
+   ok: SwapQuote;
+ };
+type MarketResult_1 = 
+ variant {
+   err: MarketError;
+   ok: nat;
+ };
+type MarketResult = 
+ variant {
+   err: MarketError;
+   ok: SwapReceipt;
+ };
+type MarketPrice = 
+ record {
+   deviationBp: int;
+   material: text;
+   maxBuyCents: nat;
+   maxSellUnits: nat;
+   midCentsE4: nat;
+   oracleCentsE4: nat;
+   poolCents: nat;
+   poolUnits: nat;
+   trend: vec PricePoint;
+   wholesaleCents: nat;
+ };
+type MarketError = 
+ variant {
+   anonymous;
+   identicalAssets;
+   insufficientFunds;
+   invalidAmount;
+   invalidPrice;
+   notFound;
+   notRegistered;
+   notSeller;
+   ownOrder;
+   poolTooThin;
+   slippage;
+   tooManyOrders;
+   unknownAsset;
+   unknownMaterial;
+ };
+type LeaderboardEntry = 
+ record {
+   level: nat;
+   name: text;
+   totalDisposed: nat;
+   xp: nat;
+ };
+type GlobalStats = 
+ record {
+   players: nat;
+   totalCollected: nat;
+   totalDisposed: nat;
+ };
+service : {
+  __exchange: () -> (reserved) query;
+  __market: () -> (reserved) query;
+  __marketBalances: (ko: opt principal, count: opt nat) ->
+   (vec record {
+          principal;
+          nat;
+        }) query;
+  __orderBook: (ko: opt nat, count: opt nat) ->
+   (vec record {
+          nat;
+          Order;
+        }) query;
+  __players: () -> (reserved) query;
+  __pools: (ko: opt text, count: opt nat) -> (vec record {
+                                                    text;
+                                                    Pool;
+                                                  }) query;
+  deleteSave: () -> (bool);
+  getGlobalStats: () -> (GlobalStats) query;
+  getLeaderboard: (maxEntries: nat) -> (vec LeaderboardEntry) query;
+  getProfile: () -> (opt ProfileOutput) query;
+  isNameAvailable: (rawName: text) -> (bool) query;
+  loadGame: () -> (opt SaveOutput) query;
+  marketBalance: () -> (nat) query;
+  marketBuy: (orderId: nat, amount: nat) -> (MarketResult_4);
+  marketCancel: (orderId: nat) -> (MarketResult_3);
+  marketCreate: (material: text, amount: nat, pricePerUnitCents: nat) ->
+   (MarketResult_3);
+  marketOrders: () -> (vec Order) query;
+  marketPrices: () -> (MarketSnapshot) query;
+  marketQuote: (fromAsset: text, toAsset: text, amountIn: nat) ->
+   (MarketResult_2) query;
+  marketSellWholesale: (material: text, amount: nat) -> (MarketResult_1);
+  marketSwap: (fromAsset: text, toAsset: text, amountIn: nat, minAmountOut:
+   nat) -> (MarketResult);
+  registerProfile: (rawName: text) -> (RegisterResult);
+  resetProgress: () -> (bool);
+  saveGame: (input: SaveInput) -> (bool);
+}

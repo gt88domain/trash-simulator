@@ -1,0 +1,158 @@
+// Version: 4.0.0
+type Data__80296667<K, V> =
+  {var count : Nat__1040412405; kvs : [var ?(K, V)]};
+type Internal__41346355<K, V> =
+  {children : [var ?Node__1000929467<K, V>]; data : Data__80296667<K, V>};
+type Leaf__712614010<K, V> = {data : Data__80296667<K, V>};
+type Map__222667396<K, V> = Map__912772452<K, V>;
+type Map__709709801<K, V> =
+  {var root : Node__1000929467<K, V>; var size : Nat__1040412405};
+type Map__912772452<K, V> = Map__709709801<K, V>;
+type Nat__1040412405 = Nat__920180692;
+type Nat__920180692 = Nat;
+type NewActor__406058885 =
+  {
+    market : {var nextOrderId : Nat};
+    marketBalances : Map__222667396<Principal, Nat>;
+    orderBook : Map__222667396<Nat, Order__516539610>;
+    players : Map__222667396<Principal, PlayerInternal__112126868>
+  };
+type NewActor__429027954 =
+  {
+    exchange : {var feeBurnedCents : Nat; var swaps : Nat};
+    market : {var nextOrderId : Nat};
+    marketBalances : Map__222667396<Principal, Nat>;
+    orderBook : Map__222667396<Nat, Order__623611227>;
+    players : Map__222667396<Principal, PlayerInternal__736044935>;
+    pools : Map__222667396<Text, Pool__868217765>
+  };
+type NewActor__592382611 =
+  {players : Map__222667396<Principal, PlayerInternal__392847636>};
+type Node__1000929467<K, V> =
+  {#internal : Internal__41346355<K, V>; #leaf : Leaf__712614010<K, V>};
+type OldActor__1058609490 = {};
+type OldActor__346910272 =
+  {
+    market : {var nextOrderId : Nat};
+    marketBalances : Map__222667396<Principal, Nat>;
+    orderBook : Map__222667396<Nat, Order__623611227>;
+    players : Map__222667396<Principal, PlayerInternal__736044935>
+  };
+type OldActor__686217799 =
+  {players : Map__222667396<Principal, PlayerInternal__112126868>};
+type Order__1002413030 =
+  {
+    amount : Nat;
+    createdAt : Int;
+    id : Nat;
+    material : Text;
+    pricePerUnitCents : Nat;
+    seller : Principal;
+    sellerName : Text
+  };
+type Order__516539610 =
+  {
+    amount : Nat;
+    createdAt : Int;
+    id : Nat;
+    material : Text;
+    pricePerUnitCents : Nat;
+    seller : Principal;
+    sellerName : Text
+  };
+type Order__623611227 =
+  {
+    amount : Nat;
+    createdAt : Int;
+    id : Nat;
+    material : Text;
+    pricePerUnitCents : Nat;
+    seller : Principal;
+    sellerName : Text
+  };
+type PlayerInternal__112126868 =
+  {
+    var data : Text;
+    var level : Nat;
+    var name : Text;
+    var recyclePoints : Nat;
+    var totalCollected : Nat;
+    var totalDisposed : Nat;
+    var updatedAt : Int;
+    var xp : Nat
+  };
+type PlayerInternal__392847636 =
+  {
+    var data : Text;
+    var level : Nat;
+    var name : Text;
+    var recyclePoints : Nat;
+    var totalCollected : Nat;
+    var totalDisposed : Nat;
+    var updatedAt : Int;
+    var xp : Nat
+  };
+type PlayerInternal__430173753 =
+  {
+    var data : Text;
+    var level : Nat;
+    var name : Text;
+    var recyclePoints : Nat;
+    var totalCollected : Nat;
+    var totalDisposed : Nat;
+    var updatedAt : Int;
+    var xp : Nat
+  };
+type PlayerInternal__736044935 =
+  {
+    var data : Text;
+    var level : Nat;
+    var name : Text;
+    var recyclePoints : Nat;
+    var totalCollected : Nat;
+    var totalDisposed : Nat;
+    var updatedAt : Int;
+    var xp : Nat
+  };
+type Pool__51564154 =
+  {
+    reserveCents : Nat;
+    reserveUnits : Nat;
+    revertedAt : Int;
+    trend : [PricePoint__21013901]
+  };
+type Pool__868217765 =
+  {
+    reserveCents : Nat;
+    reserveUnits : Nat;
+    revertedAt : Int;
+    trend : [PricePoint__411159709]
+  };
+type PricePoint__21013901 = {at : Int; midCentsE4 : Nat};
+type PricePoint__411159709 = {at : Int; midCentsE4 : Nat};
+{
+  "20260824_100000" : (_old : OldActor__1058609490) -> NewActor__592382611;
+  "20260830_120000" : (old : OldActor__686217799) -> NewActor__406058885;
+  "20260831_120000" : (old : OldActor__346910272) -> NewActor__429027954
+}
+actor  {
+  stable exchange : {var feeBurnedCents : Nat; var swaps : Nat};
+  stable market : {var nextOrderId : Nat};
+  stable marketBalances :
+    {var root : Node__1000929467<Principal, Nat>; var size : Nat__1040412405};
+  stable orderBook :
+    {
+      var root : Node__1000929467<Nat, Order__1002413030>;
+      var size : Nat__1040412405
+    };
+  stable players :
+    {
+      var root : Node__1000929467<Principal, PlayerInternal__430173753>;
+      var size : Nat__1040412405
+    };
+  stable pools :
+    {
+      var root : Node__1000929467<Text, Pool__51564154>;
+      var size : Nat__1040412405
+    }
+};
